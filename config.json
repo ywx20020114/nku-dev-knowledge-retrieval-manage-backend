@@ -1,0 +1,32 @@
+{
+  "knowledge_repo": {
+    "git_url": "https://github.com/ywx20020114/nku-dev-knowledge.git",
+    "branch": "main"
+  },
+  "targets": [
+    {
+      "name": "backend",
+      "description": "Spring Boot 后端服务",
+      "git_url": "https://github.com/ywx20020114/nku-dev-knowledge-retrieval-manage-backend.git",
+      "branch": "main",
+      "tech_stack": "spring-boot-mysql",
+      "build_tool": "maven",
+      "main_class": "com.example.Application",
+      "profiles": ["dev", "prod"],
+      "database": "your_database",
+      "orm": "mybatis-plus",
+      "docs_output": "./docs/backend",
+      "layers": ["controller", "service", "mapper", "entity", "config"]
+    },
+    {
+      "name": "frontend",
+      "description": "前端 Web 应用",
+      "git_url": "https://github.com/ywx20020114/your-frontend-project.git",
+      "branch": "main",
+      "tech_stack": "vue3",
+      "build_tool": "vite",
+      "docs_output": "./docs/frontend",
+      "layers": ["components", "pages", "store", "api", "router", "utils"]
+    }
+  ]
+}
