@@ -5,27 +5,41 @@
   },
   "targets": [
     {
-      "name": "backend",
-      "description": "Spring Boot 后端服务",
-      "git_url": "https://github.com/ywx20020114/nku-dev-knowledge-retrieval-manage-backend.git",
-      "branch": "main",
+      "name": "knowledge-retrieval-manage-backend",
+      "type": "backend",
+      "description": "知识检索管理后端服务",
+      "local_path": "C:/Users/yuwan/Desktop/knowledge-retrieval-manage-backend",
       "tech_stack": "spring-boot-mysql",
       "build_tool": "maven",
       "main_class": "com.example.Application",
       "profiles": ["dev", "prod"],
       "database": "your_database",
       "orm": "mybatis-plus",
-      "docs_output": "./docs/backend",
+      "docs_output": "./docs/knowledge-retrieval-manage-backend",
       "layers": ["controller", "service", "mapper", "entity", "config"]
     },
     {
-      "name": "frontend",
-      "description": "前端 Web 应用",
-      "git_url": "https://github.com/ywx20020114/your-frontend-project.git",
-      "branch": "main",
+      "name": "another-backend-service",
+      "type": "backend",
+      "description": "另一个后端服务（示例）",
+      "local_path": "C:/Users/yuwan/Desktop/another-backend-service",
+      "tech_stack": "spring-boot-mysql",
+      "build_tool": "maven",
+      "main_class": "com.example.Application",
+      "profiles": ["dev", "prod"],
+      "database": "another_database",
+      "orm": "mybatis-plus",
+      "docs_output": "./docs/another-backend-service",
+      "layers": ["controller", "service", "mapper", "entity", "config"]
+    },
+    {
+      "name": "admin-frontend",
+      "type": "frontend",
+      "description": "管理后台前端",
+      "local_path": "C:/Users/yuwan/Desktop/admin-frontend",
       "tech_stack": "vue3",
       "build_tool": "vite",
-      "docs_output": "./docs/frontend",
+      "docs_output": "./docs/admin-frontend",
       "layers": ["components", "pages", "store", "api", "router", "utils"]
     }
   ]

@@ -1,105 +1,119 @@
 ---
 name: nku-dev-knowledge
-description: 深度学习代码仓库（支持多项目），以各自技术栈的分层架构视角产出结构化知识文档。首次全量学习（4步），后续增量更新。
+description: 深度学习多个代码仓库（N 个后端服务 + N 个前端项目），按各自技术栈的分层视角产出结构化知识文档。首次全量学习，后续增量更新。
 ---
 
 # nku-dev-knowledge — 仓库知识学习
 
-针对多个代码仓库，以各自技术栈的分层视角进行代码学习，产出结构化知识文档到 `docs/<target>/` 目录，供 `nku-dev-workflow` 研发流程读取使用。
+面向多服务全栈项目的 AI 驱动代码学习 Skill。支持 N 个后端服务 + N 个前端项目，按各技术栈的分层视角独立学习，产出知识文档到 `docs/<target-name>/` 目录。
 
 ## 触发条件
 
-| 用户说法 | 触发模式 |
-|---------|---------|
-| "学习仓库" / "学习项目" / "开始学习" | 首次全量学习所有 targets |
-| "学习后端" / "学习 backend" | 仅学习 backend target |
-| "学习前端" / "学习 frontend" | 仅学习 frontend target |
-| "更新知识库" / "同步知识" | 增量学习，对比各 target git diff 仅更新变更部分 |
-| "重新学习 Controller 层" / "重新学习 components" 等 | 指定 target + 模块增量更新 |
+| 用户说法 | 效果 |
+|---------|------|
+| "学习仓库" / "学习所有服务" | 首次全量学习所有 targets |
+| "学习 <target-name>" | 仅学习指定 target |
+| "更新知识库" / "同步知识" | 增量学习，重新读取本地目录，对比现有知识文档仅更新变更部分 |
+| "重新学习 <target> 的 <模块>" | 指定 target + 模块增量更新 |
 
 ## 配置文件
 
 执行前先读取 `config.json`，获取：
 - `targets` — 要学习的项目列表，每个 target 包含：
-  - `name` — 项目标识（backend / frontend）
-  - `git_url` / `branch` — 项目仓库地址
-  - `tech_stack` — 技术栈（spring-boot-mysql / vue3 / react 等）
-  - `docs_output` — 文档产出目录
-  - `layers` — 分层模块列表
-- `knowledge_repo.git_url` — 知识库自身的 git 仓库地址
+  - `name` — 唯一标识（如 `user-service`、`admin-frontend`）
+  - `type` — 服务类型：`backend`（Spring Boot 后端）或 `frontend`（Vue3/React 前端）
+  - `local_path` — 本地代码目录的绝对路径（不再拉取远程代码，直接读取本地目录）
+  - `tech_stack` — 技术栈
+  - `docs_output` — 文档产出目录（`./docs/<name>`）
+  - `layers` — 该技术栈对应的分层模块
+- `knowledge_repo.git_url` — 知识库自身的 git 仓库地址（学习完成后 push 知识文档用）
 
 ## 学习策略
 
-**首次全量，后续增量。** 不同技术栈使用不同的分层视角和文档模板。
+**首次全量，后续增量。** `type` 决定使用哪种分层视角。
 
-### 后端技术栈（spring-boot-mysql）
+### type=backend（Spring Boot 后端服务）
 
 分层视角：Controller → Service → Mapper → Entity → Config
 
-| 文档 | 对应层 | 内容 |
-|------|-------|------|
-| `_overview.md` | 全局 | 项目定位、包结构、Controller 清单、MySQL 表概览、外部依赖 |
-| `server.md` | 运维 | pom.xml 关键依赖、Maven 命令、application.yml 摘要、数据库连接 |
-| `modules/controller.md` | Controller | 所有 REST 接口：路径、方法、参数、返回值、异常处理 |
-| `modules/service.md` | Service | 业务逻辑：核心方法、事务、调用关系 |
-| `modules/mapper.md` | Mapper/DAO | 数据访问：SQL、关联查询、分页 |
-| `modules/entity.md` | Entity/Model | 实体类与 MySQL 表映射、字段、索引、主键策略 |
-| `modules/config.md` | Config | Spring 配置类、拦截器、过滤器、全局异常处理 |
+| 文档 | 内容 |
+|------|------|
+| `_overview.md` | 服务定位、包结构、Controller 清单、MySQL 表概览、外部依赖（含调用的其他服务） |
+| `server.md` | pom.xml 关键依赖、Maven 命令、application.yml 摘要、数据库连接、服务端口 |
+| `modules/controller.md` | 所有 REST 接口：路径、方法、参数、返回值、异常处理 |
+| `modules/service.md` | 业务逻辑：核心方法、事务、调用关系（含 Feign/RPC 调用其他服务） |
+| `modules/mapper.md` | 数据访问：SQL、关联查询、分页 |
+| `modules/entity.md` | 实体类与 MySQL 表映射、字段、索引、主键策略 |
+| `modules/config.md` | Spring 配置类、拦截器、过滤器、全局异常处理、Feign 客户端配置 |
 
-### 前端技术栈（vue3 / react）
+### type=frontend（Vue3 / React 前端）
 
-分层视角：Components → Pages → Store → API → Router → Utils
+分层视角：Pages → Components → Store → API → Router → Utils
 
-| 文档 | 对应层 | 内容 |
-|------|-------|------|
-| `_overview.md` | 全局 | 项目定位、技术栈版本、页面路由清单、组件树概览、外部依赖 |
-| `server.md` | 运维 | package.json 关键依赖、构建/启动命令、环境变量、代理配置 |
-| `modules/components.md` | Components | 公共组件：Props、Emits、Slots、使用场景 |
-| `modules/pages.md` | Pages | 页面组件与路由映射、页面级状态、生命周期数据获取 |
-| `modules/store.md` | Store | 状态管理：Store 模块、State/Getter/Action 定义 |
-| `modules/api.md` | API | 接口调用层：请求封装、拦截器、API 函数列表 |
-| `modules/router.md` | Router | 路由配置：路径、守卫、懒加载 |
-| `modules/utils.md` | Utils | 工具函数、自定义 Hooks/Composables、常量定义 |
+| 文档 | 内容 |
+|------|------|
+| `_overview.md` | 项目定位、技术栈版本、页面路由清单、组件树概览、调用的后端服务列表 |
+| `server.md` | package.json 关键依赖、构建/启动命令、环境变量、代理配置 |
+| `modules/pages.md` | 页面组件与路由映射、页面级状态、数据获取 |
+| `modules/components.md` | 公共组件：Props、Emits、Slots、使用场景 |
+| `modules/store.md` | 状态管理：Store 模块、State/Getter/Action |
+| `modules/api.md` | 接口调用层：请求封装、拦截器、API 函数列表（标注调用的后端服务） |
+| `modules/router.md` | 路由配置：路径、守卫、懒加载 |
+| `modules/utils.md` | 工具函数、Composables/Hooks、常量 |
+
+## config.json 字段分类
+
+学习过程中，config.json 的 target 字段分为两类：
+
+### 受保护字段（人工指定，学习过程不可修改）
+
+| 字段 | 说明 |
+|------|------|
+| `name` | 服务唯一标识 |
+| `type` | backend / frontend |
+| `description` | 服务描述 |
+| `local_path` | 本地代码目录路径 |
+| `docs_output` | 知识文档产出目录 |
+
+### 可发现字段（学习过程自动探测并回写）
+
+| 字段 | 说明 | 探测方式 |
+|------|------|---------|
+| `tech_stack` | 实际技术栈 | 从 pom.xml / package.json / 项目文件推断 |
+| `build_tool` | 构建工具 | 检测 pom.xml(maven) / build.gradle(gradle) / package.json 等 |
+| `main_class` | 启动类（后端） | 扫描 @SpringBootApplication 注解 |
+| `profiles` | 激活的 profile | 扫描 application-*.yml / .env 文件 |
+| `database` | 数据库名 | 从 application.yml 连接串提取 |
+| `orm` | ORM 框架（后端） | 检测 mybatis-plus / jpa / jdbc 等依赖 |
+| `layers` | 实际分层模块 | 扫描包结构，以实际存在的目录为准 |
+| `port` | 服务端口（后端） | 从 application.yml server.port 提取 |
+
+学习过程中如果实际探测值与 config 中的值不一致，**自动更新 config.json** 中对应的可发现字段。受保护字段永远不动。
 
 ## 首次全量学习流程（4步）
 
-### STEP 1：确认目标
+对每个 target 依次执行：
 
-对每个 target：
-1. clone 目标仓库，切换到指定分支
-2. 根据 `tech_stack` 识别技术栈，定位核心配置文件和依赖
-3. 输出目标确认报告
+### STEP 1：确认目标 + 更新配置
+读取 `local_path` 本地目录 → 探测可发现字段 → 若与 config.json 当前值不一致则回写更新 → 输出确认报告（标注哪些配置字段被自动修正）
 
-### STEP 2：全局学习 → 产出 `_overview.md` + `server.md`
+### STEP 2：全局学习
+产出 `_overview.md` + `server.md`
 
-针对每个 target 的技术栈，产出全局视图文档。
+### STEP 3：模块深度学习
+按 target 的实际 `layers`（以探测结果为准）逐模块学习，产出 `modules/*.md`
 
-### STEP 3：模块深度学习 → 产出 `modules/*.md`
-
-按照 target 的 `layers` 配置，逐个模块深度学习并产出文档。
-
-### STEP 4：校验归档
-
-1. 检查文档完整性
-2. 所有文档写入对应的 `docs/<target>/` 目录
-3. 知识库 git commit + push
+### STEP 4：校验归档 + 推送
+完整性检查 → 写入 `docs/<target-name>/` → 将更新后的 config.json 一并 git add → git commit → git push（将最新知识文档 + 配置推送到 `knowledge_repo.git_url` 仓库）
 
 ## 增量学习
 
-全量学习完成后，后续根据代码变更增量更新。
+重新读取各 target 的 `local_path` 本地目录，对比已有知识文档，仅更新有变更的部分。增量学习同样需要重新探测可发现字段，如有变化则回写 config.json。每次增量更新后 git add → git commit → git push 知识库（含 config.json）。
 
-**自动判断更新范围（对比 git diff）**：
+## 新增服务
 
-| 变更类型 | 更新文档 |
-|---------|---------|
-| 新增/删除路由或接口 | `_overview.md` + 对应模块文档 |
-| 新增/删除业务模块 | 对应模块文档 |
-| 核心配置文件变更 | `server.md` |
-| 新增外部依赖 | `_overview.md` |
-
-**每次增量更新后必须**：git add → git commit → git push。
-
-## 指定 target + 模块更新
-
-- "重新学习后端 Controller 层" → 仅更新 `docs/backend/modules/controller.md`
-- "重新学习前端 components" → 仅更新 `docs/frontend/modules/components.md`
+在 `config.json` 的 `targets` 数组中追加即可（受保护字段必填，可发现字段可留空让学习过程自动填充）：
+```json
+{ "name": "payment-service", "type": "backend", "local_path": "C:/path/to/payment-service" }
+```
+然后说"学习 payment-service"触发该服务的学习，可发现字段会自动探测并回写。
